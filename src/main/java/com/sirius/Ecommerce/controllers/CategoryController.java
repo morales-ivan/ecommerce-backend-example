@@ -1,12 +1,11 @@
 package com.sirius.Ecommerce.controllers;
 
 
-import com.sirius.Ecommerce.model.Category;
+import com.sirius.Ecommerce.model.category.CategoryCreationDTO;
+import com.sirius.Ecommerce.model.category.CategoryListingDTO;
 import com.sirius.Ecommerce.services.CategoryService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,32 +19,29 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService) { this.categoryService = categoryService; }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public List<CategoryListingDTO> getAllCategories() {
+        return categoryService.getCategories();
+
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<Category> getCategory(@PathVariable Long categoryId) {
-        return new ResponseEntity<>(categoryService.getCategoryById(categoryId), HttpStatus.OK);
+    public CategoryListingDTO getCategory(@PathVariable Long categoryId) {
+        return categoryService.getCategoryById(categoryId);
     }
 
     @PostMapping
-    public ResponseEntity<Category> saveCategory(@RequestBody Category category) {
-        Category responseCategory = categoryService.insert(category);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("category", "/api/v1/category/" + responseCategory.getId().toString());
-        return new ResponseEntity<>(responseCategory, httpHeaders, HttpStatus.CREATED);
+    public CategoryListingDTO saveCategory(@RequestBody CategoryCreationDTO categoryCreationDTO) {
+        return categoryService.save(categoryCreationDTO);
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long categoryId, @RequestBody Category category) {
-        categoryService.updateCategory(categoryId, category);
-        return new ResponseEntity<>(categoryService.getCategoryById(categoryId), HttpStatus.OK);
+    public CategoryListingDTO updateCategory(@PathVariable Long categoryId, @RequestBody CategoryListingDTO updatedCategoryListingDTO) {
+        categoryService.updateCategory(categoryId, updatedCategoryListingDTO);
+        return categoryService.getCategoryById(categoryId);
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Category> deleteCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryListingDTO> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
