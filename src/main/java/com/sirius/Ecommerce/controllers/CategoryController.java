@@ -21,7 +21,11 @@ public class CategoryController {
     @GetMapping
     public List<CategoryListingDTO> getAllCategories() {
         return categoryService.getCategories();
+    }
 
+    @GetMapping("/{pageSize}/{pageNumber}")
+    public List<CategoryListingDTO> getPaginatedCategories(@PathVariable Integer pageSize, @PathVariable Integer pageNumber) {
+        return categoryService.getPaginatedCategories(pageSize, pageNumber);
     }
 
     @GetMapping("/{categoryId}")

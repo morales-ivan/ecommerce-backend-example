@@ -8,6 +8,8 @@ import java.util.List;
 public interface CategoryService {
     List<CategoryListingDTO> getCategories();
 
+    List<CategoryListingDTO> getPaginatedCategories(Integer pageSize, Integer pageNumber);
+
     CategoryListingDTO getCategoryById(Long id);
 
     CategoryListingDTO save(CategoryCreationDTO categoryCreationDTO);
