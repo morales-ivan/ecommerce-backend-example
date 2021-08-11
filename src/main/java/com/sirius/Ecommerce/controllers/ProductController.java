@@ -22,6 +22,11 @@ public class ProductController {
         return productService.getProducts();
     }
 
+    @GetMapping("/{pageSize}/{pageNumber}")
+    public List<ProductListingDTO> getPaginatedProducts(@PathVariable Integer pageSize, @PathVariable Integer pageNumber) {
+        return productService.getPaginatedProducts(pageSize, pageNumber);
+    }
+
     @GetMapping("/{productId}")
     public ProductListingDTO getProduct(@PathVariable Long productId) {
         return productService.getProductById(productId);

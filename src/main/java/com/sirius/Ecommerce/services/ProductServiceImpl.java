@@ -6,6 +6,7 @@ import com.sirius.Ecommerce.model.product.ProductCreationDTO;
 import com.sirius.Ecommerce.model.product.ProductListingDTO;
 import com.sirius.Ecommerce.repositories.CategoryRepository;
 import com.sirius.Ecommerce.repositories.ProductRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +29,12 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductListingDTO> getProducts() {
         List<Product> products = new ArrayList<>((Collection<? extends Product>) productRepository.findAll());
         return products.stream().map(ProductListingDTO::fromProduct).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductListingDTO> getPaginatedProducts(Integer pageSize, Integer pageNumber) {
+        List<Product> paginatedProducts = productRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        return paginatedProducts.stream().map(ProductListingDTO::fromProduct).collect(Collectors.toList());
     }
 
     @Override

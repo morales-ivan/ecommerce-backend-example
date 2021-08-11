@@ -8,6 +8,8 @@ import java.util.List;
 public interface ProductService {
     List<ProductListingDTO> getProducts();
 
+    List<ProductListingDTO> getPaginatedProducts(Integer pageSize, Integer pageNumber);
+
     ProductListingDTO getProductById(Long productId);
 
     ProductListingDTO save(ProductCreationDTO productCreationDto);
