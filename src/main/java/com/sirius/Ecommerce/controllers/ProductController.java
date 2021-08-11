@@ -4,6 +4,7 @@ package com.sirius.Ecommerce.controllers;
 import com.sirius.Ecommerce.model.product.ProductCreationDTO;
 import com.sirius.Ecommerce.model.product.ProductListingDTO;
 import com.sirius.Ecommerce.services.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping("/{pageSize}/{pageNumber}")
-    public List<ProductListingDTO> getPaginatedProducts(@PathVariable Integer pageSize, @PathVariable Integer pageNumber) {
+    public Page<ProductListingDTO> getPaginatedProducts(@PathVariable Integer pageSize, @PathVariable Integer pageNumber) {
         return productService.getPaginatedProducts(pageSize, pageNumber);
     }
 

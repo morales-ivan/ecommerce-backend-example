@@ -2,13 +2,14 @@ package com.sirius.Ecommerce.services;
 
 import com.sirius.Ecommerce.model.product.ProductCreationDTO;
 import com.sirius.Ecommerce.model.product.ProductListingDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface ProductService {
     List<ProductListingDTO> getProducts();
 
-    List<ProductListingDTO> getPaginatedProducts(Integer pageSize, Integer pageNumber);
+    Page<ProductListingDTO> getPaginatedProducts(Integer pageSize, Integer pageNumber);
 
     ProductListingDTO getProductById(Long productId);
 

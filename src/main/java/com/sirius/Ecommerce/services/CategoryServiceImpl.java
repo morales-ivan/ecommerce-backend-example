@@ -4,7 +4,10 @@ import com.sirius.Ecommerce.model.category.Category;
 import com.sirius.Ecommerce.model.category.CategoryCreationDTO;
 import com.sirius.Ecommerce.model.category.CategoryListingDTO;
 import com.sirius.Ecommerce.repositories.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,9 +29,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryListingDTO> getPaginatedCategories(Integer pageSize, Integer pageNumber) {
-        List<Category> paginatedProducts = categoryRepository.findAll(PageRequest.of(pageNumber, pageSize));
-        return paginatedProducts.stream().map(CategoryListingDTO::fromCategory).collect(Collectors.toList());
+    public Page<CategoryListingDTO> getPaginatedCategories(Integer pageSize, Integer pageNumber) {
+        Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Category> paginatedCategories = categoryRepository.findAll(pageRequest);
+        return new PageImpl<>(paginatedCategories.getContent().stream()
+                                    .map(CategoryListingDTO::fromCategory).collect(Collectors.toList()),
+                              pageRequest,
+                              paginatedCategories.getTotalElements());
     }
 
     @Override
