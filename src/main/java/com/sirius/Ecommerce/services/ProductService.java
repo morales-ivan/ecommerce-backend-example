@@ -1,17 +1,18 @@
 package com.sirius.Ecommerce.services;
 
-import com.sirius.Ecommerce.model.Product;
+import com.sirius.Ecommerce.model.product.ProductCreationDTO;
+import com.sirius.Ecommerce.model.product.ProductListingDTO;
 
 import java.util.List;
 
 public interface ProductService {
-    List<Product> getProducts();
+    List<ProductListingDTO> getProducts();
 
-    Product getProductById(Long productId);
+    ProductListingDTO getProductById(Long productId);
 
-    Product insert(Product product);
+    ProductListingDTO save(ProductCreationDTO productCreationDto);
 
-    void updateProduct(Long productId, Product product);
+    void updateProduct(Long productId, ProductListingDTO productListingDto);
 
     void deleteProduct(Long productId);
 }

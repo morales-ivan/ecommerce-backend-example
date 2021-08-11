@@ -1,46 +1,70 @@
 package com.sirius.Ecommerce.services;
 
-import com.sirius.Ecommerce.model.Product;
+import com.sirius.Ecommerce.model.category.Category;
+import com.sirius.Ecommerce.model.product.Product;
+import com.sirius.Ecommerce.model.product.ProductCreationDTO;
+import com.sirius.Ecommerce.model.product.ProductListingDTO;
+import com.sirius.Ecommerce.repositories.CategoryRepository;
 import com.sirius.Ecommerce.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) { this.productRepository = productRepository; }
-
-    @Override
-    public List<Product> getProducts() {
-        // return products.stream().map(ProductDTO::fromProduct).collect(Collectors.toList());
-        return new ArrayList<>(productRepository.findAll());
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(()
+    public List<ProductListingDTO> getProducts() {
+        List<Product> products = new ArrayList<>((Collection<? extends Product>) productRepository.findAll());
+        return products.stream().map(ProductListingDTO::fromProduct).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductListingDTO getProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(()
                 -> new IllegalArgumentException("Product not found"));
+        return ProductListingDTO.fromProduct(product);
     }
 
     @Override
-    public Product insert(Product requestProduct) {
+    public ProductListingDTO save(ProductCreationDTO requestProduct) {
+        Set<Category> categories = requestProduct.getCategoryIds().stream()
+                .map(categoryId -> categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category not found")))
+                .collect(Collectors.toSet());
+
         Product product = new Product();
         product.setName(requestProduct.getName());
         product.setDescription(requestProduct.getDescription());
-//    public Product insert(Product product) {
-        return productRepository.save(product);
+        product.setQuantity(requestProduct.getQuantity());
+        product.setCategories(categories);
+
+        return ProductListingDTO.fromProduct(productRepository.save(product));
     }
 
     @Override
-    public void updateProduct(Long id, Product product) {
+    public void updateProduct(Long id, ProductListingDTO productListingDto) {
         Product productFromDb = productRepository.findById(id).get();
         System.out.println(productFromDb);
-        productFromDb.setName(product.getName());
-        productFromDb.setDescription(product.getDescription());
-        productFromDb.setQuantity(product.getQuantity());
+        productFromDb.setName(productListingDto.getName());
+        productFromDb.setDescription(productListingDto.getDescription());
+        productFromDb.setQuantity(productListingDto.getQuantity());
+
+        Set<Category> categories = productListingDto.getCategoryIds().stream()
+                .map(category -> categoryRepository.findById(category).orElseThrow(() -> new IllegalArgumentException("Category not found")))
+                .collect(Collectors.toSet());
+
+        productFromDb.setCategories(categories);
         productRepository.save(productFromDb);
     }
 

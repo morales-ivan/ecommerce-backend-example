@@ -1,4 +1,4 @@
-package com.sirius.Ecommerce.model;
+package com.sirius.Ecommerce.model.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,13 +29,6 @@ public class Category {
     @Column
     String description;
 
-    @ManyToMany
-    @JoinTable(
-            joinColumns = { @JoinColumn(name = "category_id") },
-            inverseJoinColumns = { @JoinColumn(name = "product_id") }
-    )
-    private Set<Product> products = new HashSet<>();
-
     @CreationTimestamp
     @Column(updatable = false)
     Timestamp createdAt;
@@ -64,14 +57,6 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
     }
 
     public Timestamp getCreatedAt() {

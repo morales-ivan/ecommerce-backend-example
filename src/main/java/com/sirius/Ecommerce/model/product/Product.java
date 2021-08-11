@@ -1,5 +1,6 @@
-package com.sirius.Ecommerce.model;
+package com.sirius.Ecommerce.model.product;
 
+import com.sirius.Ecommerce.model.category.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,12 +30,21 @@ public class Product {
     @Column
     Long quantity;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany
     Set<Category> categories = new HashSet<>();
 
     @CreationTimestamp
     @Column(updatable = false)
-    Timestamp createdAt;
+    LocalDateTime createdAt;
+
     @UpdateTimestamp
-    Timestamp lastModified;
+    LocalDateTime lastModified;
+
+    public Product(Long productId, String name, String description, Set<Category> categories) {
+        this.id = productId;
+        this.name = name;
+        this.description = description;
+        this.categories = categories;
+        // TODO posible rotura de los timestamps (se instancia con timesteamps vacios?)
+    }
 }

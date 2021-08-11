@@ -1,17 +1,18 @@
 package com.sirius.Ecommerce.services;
 
-import com.sirius.Ecommerce.model.Category;
+import com.sirius.Ecommerce.model.category.CategoryCreationDTO;
+import com.sirius.Ecommerce.model.category.CategoryListingDTO;
 
 import java.util.List;
 
 public interface CategoryService {
-    List<Category> getCategories();
+    List<CategoryListingDTO> getCategories();
 
-    Category getCategoryById(Long id);
+    CategoryListingDTO getCategoryById(Long id);
 
-    Category insert(Category category);
+    CategoryListingDTO save(CategoryCreationDTO categoryCreationDTO);
 
-    void updateCategory(Long id, Category category);
+    void updateCategory(Long id, CategoryListingDTO categoryListingDTO);
 
-    void deleteCategory(Long categoryId);
+    void deleteCategory(Long id);
 }
