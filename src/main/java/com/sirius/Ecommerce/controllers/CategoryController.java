@@ -25,12 +25,14 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
-    @GetMapping("/{pageSize}/{pageNumber}")
-    public Page<CategoryListingDTO> getPaginatedCategories(@PathVariable Integer pageSize, @PathVariable Integer pageNumber) {
-        return categoryService.getPaginatedCategories(pageSize, pageNumber);
+    @GetMapping("/{pageNumber}")
+    public Page<CategoryListingDTO> getPaginatedCategories(@RequestParam(required = false) Integer pageSize,
+                                                           @PathVariable Integer pageNumber) {
+        if (pageSize == null) pageSize = 5;
+        return categoryService.getPaginatedCategories(pageNumber, pageSize);
     }
 
-    @GetMapping("/{categoryId}")
+    @GetMapping("/id/{categoryId}")
     public CategoryListingDTO getCategory(@PathVariable Long categoryId) {
         return categoryService.getCategoryById(categoryId);
     }

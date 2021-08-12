@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductService {
     List<ProductListingDTO> getProducts();
 
-    Page<ProductListingDTO> getPaginatedProducts(Integer pageSize, Integer pageNumber);
+    Page<ProductListingDTO> getPaginatedProducts(Integer pageNumber, Integer pageSize);
 
     ProductListingDTO getProductById(Long productId);
 

@@ -9,7 +9,7 @@ import java.util.List;
 public interface CategoryService {
     List<CategoryListingDTO> getCategories();
 
-    Page<CategoryListingDTO> getPaginatedCategories(Integer pageSize, Integer pageNumber);
+    Page<CategoryListingDTO> getPaginatedCategories(Integer pageNumber, Integer pageSize);
 
     CategoryListingDTO getCategoryById(Long id);
 

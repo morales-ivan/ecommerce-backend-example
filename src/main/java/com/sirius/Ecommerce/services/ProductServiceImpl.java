@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductListingDTO> getPaginatedProducts(Integer pageSize, Integer pageNumber) {
+    public Page<ProductListingDTO> getPaginatedProducts(Integer pageNumber, Integer pageSize) {
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
         Page<Product> paginatedProducts = productRepository.findAll(PageRequest.of(pageNumber, pageSize));
         return new PageImpl<>(paginatedProducts.getContent().stream()
@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void updateProduct(Long id, ProductListingDTO productListingDto) {
         Product productFromDb = productRepository.findById(id).get();
-        System.out.println(productFromDb);
+
         productFromDb.setName(productListingDto.getName());
         productFromDb.setDescription(productListingDto.getDescription());
         productFromDb.setQuantity(productListingDto.getQuantity());
