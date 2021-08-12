@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Long> {
     Page<Product> findAll(Pageable pageRequest);
+
+    boolean existsByName(String name);
 }
