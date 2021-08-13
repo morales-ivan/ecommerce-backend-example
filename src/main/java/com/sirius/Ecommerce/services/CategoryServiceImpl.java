@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryListingDTO> getPaginatedCategories(Integer pageSize, Integer pageNumber) {
+    public Page<CategoryListingDTO> getPaginatedCategories(Integer pageNumber, Integer pageSize) {
         Pageable pageRequest = PageRequest.of(pageNumber, pageSize);
         Page<Category> paginatedCategories = categoryRepository.findAll(pageRequest);
         return new PageImpl<>(paginatedCategories.getContent().stream()
