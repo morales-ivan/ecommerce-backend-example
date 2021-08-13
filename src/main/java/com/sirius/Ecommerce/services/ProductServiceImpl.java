@@ -53,8 +53,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductListingDTO save(ProductCreationDTO requestProduct) {
+        if (productRepository.existsByName(requestProduct.getName()))
+            throw new IllegalArgumentException("Existing product name!");
+
         Set<Category> categories = requestProduct.getCategoryIds().stream()
-                .map(categoryId -> categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category not found")))
+                .map(categoryId -> categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new IllegalArgumentException("Category not found")))
                 .collect(Collectors.toSet());
 
         Product product = new Product();
