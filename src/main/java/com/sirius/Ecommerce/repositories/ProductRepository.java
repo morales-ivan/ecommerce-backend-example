@@ -16,5 +16,9 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
     boolean existsByName(String name);
 
-    List<Product> findAllByCategoriesContains(Category category);
+    @Query(value = "SELECT * FROM product potentialProduct WHERE ?1 IN (SELECT relation.categories_id from product_categories relation where potentialProduct.id=relation.product_id);",
+            nativeQuery = true)
+    List<Product> findAllWithCategoryId(Long categoryId);
+
+    // List<Product> findAllByCategoriesContains(Category category);
 }

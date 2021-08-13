@@ -72,10 +72,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id).get();
-        List<Product> products = productRepository.findAllByCategoriesContains(category);
-        
-        updateProducts(products, category);
+        // Category category = categoryRepository.findById(id).get();
+        // List<Product> products = productRepository.findAllByCategoriesContains(category);
+        List<Product> products = productRepository.findAllWithCategoryId(id);
+
+        Category deprecatedCategory = categoryRepository.findById(id).get();
+        updateProducts(products, deprecatedCategory);
 
         categoryRepository.deleteById(id);
     }
