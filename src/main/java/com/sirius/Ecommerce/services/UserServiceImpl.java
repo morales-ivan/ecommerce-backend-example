@@ -1,14 +1,18 @@
 package com.sirius.Ecommerce.services;
 
-import com.sirius.Ecommerce.model.category.Category;
 import com.sirius.Ecommerce.model.user.User;
 import com.sirius.Ecommerce.model.user.UserCreationDTO;
 import com.sirius.Ecommerce.model.user.UserListingDTO;
 import com.sirius.Ecommerce.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,12 +20,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+import static java.lang.String.format;
 
-    public UserServiceImpl(UserRepository userRepository) {
+@Service
+public class UserServiceImpl implements UserDetailsService, UserService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -55,8 +64,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setFullName(requestUser.getFullName());
         user.setUsername(requestUser.getUsername());
-        // user.setPassword(passwordEncoder.encode(requestUser.getPassword())); TODO encode password
-        user.setPassword(requestUser.getPassword());
+        user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
 
         return UserListingDTO.fromUser(userRepository.save(user));
     }
@@ -74,5 +82,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException(format("User with username - %s, not found", username))
+                );
+    }
+
+    @Override
+    public boolean usernameExists(String username) {
+        return userRepository.findByUsername(username).isPresent();
     }
 }
