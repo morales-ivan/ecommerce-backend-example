@@ -1,5 +1,6 @@
 package com.sirius.Ecommerce.model.user;
 
+import com.sirius.Ecommerce.model.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -39,9 +38,12 @@ public class User implements UserDetails {
     @UpdateTimestamp
     LocalDateTime lastModified;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    Set<Role> authorities = new HashSet<>();
+
     @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+    public Collection<Role> getAuthorities() {
+        return authorities;
     }
 
     @Override

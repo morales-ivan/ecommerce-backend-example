@@ -1,14 +1,17 @@
 package com.sirius.Ecommerce.config.security;
 
+import com.sirius.Ecommerce.model.role.Role;
 import com.sirius.Ecommerce.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(UserRepository userRepository, JwtTokenFilter jwtTokenFilter) {
         this.userRepository = userRepository;
         this.jwtTokenFilter = jwtTokenFilter;
+    }
+
+    @Bean
+    GrantedAuthorityDefaults grantedAuthorityDefaults() {
+        return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
     }
 
     @Override
@@ -82,11 +90,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                         "/swagger-ui.html**",
                                         "/webjars/**").permitAll()
                 // Public endpoints
-                .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                 // Private endpoints
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.GET,  "/api/v1/user/**",
+                                                        "/api/v1/product/**",
+                                                        "/api/v1/category/**").hasAuthority(Role.CUSTOMER)
+                .anyRequest().hasAuthority(Role.ADMIN);
 
         // Add JWT token filter
         http.addFilterBefore(

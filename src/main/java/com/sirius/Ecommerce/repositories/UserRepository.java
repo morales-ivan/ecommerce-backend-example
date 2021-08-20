@@ -1,6 +1,5 @@
 package com.sirius.Ecommerce.repositories;
 
-import com.sirius.Ecommerce.model.product.Product;
 import com.sirius.Ecommerce.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

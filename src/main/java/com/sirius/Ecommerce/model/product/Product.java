@@ -45,6 +45,5 @@ public class Product {
         this.name = name;
         this.description = description;
         this.categories = categories;
-        // TODO posible rotura de los timestamps (se instancia con timesteamps vacios?) --> NOUP
     }
 }
